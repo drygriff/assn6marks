@@ -160,6 +160,35 @@ public class ClassGrades
     } // End of sortGrades
     
     
+    
+    
+    
+    /**
+     * Calculates and returns the average (mean) of all grades
+     * 
+     * @param None
+     * @return None
+     */
+    public int getAverage() {
+        int numOfGrades = gradeList.size();
+        int gradeSum = 0;
+        
+        
+        if (numOfGrades == 0) {
+            System.err.println("Cannot get average of 0 elements");
+            return 0;
+        } // End of if
+        
+        
+        
+        for (int currentGrade : gradeList) {
+            gradeSum += currentGrade;
+        } // End of for loop
+        
+        return (gradeSum/numOfGrades);
+    } // End of getAverage()
+    
+    
 } // End of class ClassGrades
 
 

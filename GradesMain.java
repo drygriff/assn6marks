@@ -17,11 +17,11 @@ import java.util.Random; // import random class
  * - ArrayList.sort (in ClassGrades)
  * - lambda expression (in ClassGrades)
  * - loop label (in ConsoleUserInput)
- * - for loop + enhanced
+ * - for loop
+ * - enhanced for loop (in ClassGrades)
  * - while/do-while loop
  * - switch case
  * - String.repeat (in MyUtility)
- * - double to int converstion like: (int)3.2
  * - try-catch
  * - Random.nextInt()
  * - helper classes (MyUtility, ConsoleUserInput, ClassGrades)
@@ -59,7 +59,7 @@ public class GradesMain {;
     /**
      * Manages the functionality for adding a new grade to the class
      * 
-     * @param None
+     * @param ClassGrades classToAddTo
      * @return None
      */
     static void handleAddCommand(ClassGrades classToAddTo) {
@@ -106,7 +106,7 @@ public class GradesMain {;
     
     
     /**
-     * Manages the functionality for adding a new grade to the class
+     * Manages the functionality for removing a grade from the class
      * 
      * @param ClassGrades classToRandomize
      * @return None
@@ -166,7 +166,7 @@ public class GradesMain {;
     
     
     /**
-     * Manages the functionality for adding a new grade to the class
+     * Manages the functionality for adding random grades to the class
      * 
      * @param ClassGrades classToRandomize
      * @return None
@@ -214,6 +214,27 @@ public class GradesMain {;
         
         System.out.println("\nPopulated class with " + numberOfGradesToAdd + " random grades!");
     } // End of handleRandomCommand
+    
+    
+    
+    
+    
+    /**
+     * Manages the functionality for getting the average grade of the class
+     * 
+     * @param ClassGrades classToAverage
+     * @return None
+     */
+    static void handleAverageCommand(ClassGrades classToAverage) {
+        
+        if (classToAverage.numberOfGrades() == 0) {
+            System.out.println("\nNo grades available to average.");
+            return;
+        } // End of if
+        
+        
+        System.out.println("\nThe class average is: " + classToAverage.getAverage() + "%");
+    } // End of handleAverageCommand
     
     
     
@@ -285,8 +306,11 @@ public class GradesMain {;
         System.out.println("""
         To use the program, enter the corresponding
         number or word to execute a command.
-        You can add, modify, or view statistics about
-        your class's grades.
+        
+        Use the help command to see more about each option.
+        
+        Use the refresh command after making changes in the JFrame visual
+        
         When removing grades, use the number in brackets
         and not the percent grade value.""");
     } // End of logExplanation
@@ -403,8 +427,10 @@ public class GradesMain {;
             "remove - Remove a grade",
             "random - Adds a number of random grades",
             "sort - Sorts all grades in descending order",
+            "average - Get the average (mean) of all grades",
             "clear - Remove all grades",
             "list - Toggle grade list visibility",
+            "refresh - Refresh the console, usually after JFrame changes",
             "help - Toggle command descriptions", 
             "exit - Exit the program"
         };
@@ -460,6 +486,10 @@ public class GradesMain {;
                     mainClassGrades.sortGrades();
                     System.out.println("\nGrades successfully sorted!");
                     break;
+                    
+                case "average":
+                    handleAverageCommand(mainClassGrades);
+                    break;
                 
                 case "clear":
                     mainClassGrades.removeAllGrades();
@@ -469,6 +499,10 @@ public class GradesMain {;
                 case "list":
                     showList = !showList;
                     break;
+                    
+                case "refresh":
+                    newSection(mainClassGrades, showList); // force new section without waiting
+                    continue;
                     
                 case "help":
                     showDescriptions = !showDescriptions;
