@@ -71,7 +71,7 @@ public class ConsoleUserInput
      * @param showOptionDescriptions HashMap of String and String - can be null
      * @return String - the selected option
      */
-    public static int selectFromOptions(String promptQuestion, String boxHeader, String[] fullOptions, boolean requireConfirmation, boolean showOptionDescriptions) {
+    public static String selectFromOptions(String promptQuestion, String boxHeader, String[] fullOptions, boolean requireConfirmation, boolean showOptionDescriptions) {
         // method variables
         Scanner optionScanner;
         String[] optionKeywords;
@@ -139,138 +139,8 @@ public class ConsoleUserInput
             // repeat if requires confirmation and user does not confirm 
         } while(requireConfirmation && (!yesOrNoQuestion("Are you sure you want to select \"" + optionKeywords[finalSelectedIndex] + "\"?"))); // End of confirmation while loop
 
-        return finalSelectedIndex;
+        return optionKeywords[finalSelectedIndex];
     } // End of selectFromOptions
-    
-    
-    
-    
-    
-    /**
-     * Allows the user to select from two groups of options
-     * 
-     * @param mainPrompt String
-     * @param firstHeader String
-     * @param secondHeader String
-     * @param firstOptions String[]
-     * @param secondOptions String[]
-     * @param requireConfirmation boolean
-     * @param showDescriptions boolean
-     */
-    public static int selectFromTwoOptionGroups(String mainPrompt, String firstHeader, String secondHeader, String[] firstOptions, String[] secondOptions, boolean requireConfirmation, boolean showOptionDescriptions) {
-        // method variables
-        Scanner optionScanner;
-        String[] firstKeywords;
-        String[] secondKeywords;
-        String inputSelection;
-        String firstBoxText;
-        String secondBoxText;
-        String selectedKeyword;
-        int finalSelectedIndex;
-        int selectionIndex;
-        boolean repeatPrompt;
-        
-        
-        
-        firstKeywords = new String[firstOptions.length];
-        for (int i = 0; i < firstOptions.length; i++) {
-            firstKeywords[i] = firstOptions[i].split(" - ")[0].trim(); // get first section of each option as keyword
-        } // End of for loop
-        
-        secondKeywords = new String[secondOptions.length];
-        for (int i = 0; i < secondOptions.length; i++) {
-            secondKeywords[i] = secondOptions[i].split(" - ")[0].trim();
-        } // End of for loop
-
-        
-
-        do { // repeats if user wants to retry input
-        
-            System.out.println(mainPrompt);
-            
-            
-            firstBoxText = firstHeader + "\n";
-            for (int i = 0; i < firstOptions.length; i++) {
-                
-                if (showOptionDescriptions) { // if using description
-                    firstBoxText += (" (" + (i+1) + ")  " + firstOptions[i] + "\n");
-                } else { // if no description
-                    firstBoxText += (" (" + (i+1) + ")  " + firstKeywords[i] + "\n");
-                } // End of if-else
-            } // End of for loop
-            
-            
-            secondBoxText = secondHeader + "\n";
-            for (int i = 0; i < secondOptions.length; i++) {
-                
-                if (showOptionDescriptions) { // if using description
-                    secondBoxText += (" (" + (i+firstOptions.length+1) + ")  " + secondOptions[i] + "\n");
-                } else { // if no description
-                    secondBoxText += (" (" + (i+firstOptions.length+1) + ")  " + secondKeywords[i] + "\n");
-                } // End of if-else
-            } // End of for loop
-            
-            
-            MyUtility.printInSectionedBox(new String[] {firstBoxText, secondBoxText}, 2, 1, 1, 1);
-            
-            
-
-
-            validateLoop: while (true) { // labelled loop as validateLoop, exits with break when valid selection given
-                System.out.print("Enter your selection: ");
-                
-                optionScanner = new Scanner(System.in); // Open and close scanner
-                inputSelection = optionScanner.nextLine().trim().toLowerCase();
-                optionScanner.close();
-
-
-                for (int i = 0; i < firstKeywords.length; i++) {
-                    if (inputSelection.equals(firstKeywords[i].toLowerCase())) {
-                        finalSelectedIndex = i;
-                        break validateLoop;
-                    } // End of if equal
-                } // End of for loop
-                
-                for (int i = 0; i < secondKeywords.length; i++) {
-                    if (inputSelection.equals(secondKeywords[i].toLowerCase())) {
-                        finalSelectedIndex = i + firstKeywords.length;
-                        break validateLoop;
-                    } // End of if equal
-                } // End of for loop
-                
-                
-                try {
-                    selectionIndex = Integer.parseInt(inputSelection) - 1; // Adjust for 0 starting value
-                    
-                    if ((selectionIndex >= 0) && (selectionIndex < firstKeywords.length + secondKeywords.length)) {
-                        finalSelectedIndex = selectionIndex;
-                        break;
-                    }
-                    
-                } catch (NumberFormatException numberE) {
-                    // do nothing
-                } // End of try-catch
-                
-                System.out.println("Invalid selection. Try again.");
-            }// End of validate while loop
-            
-            if (requireConfirmation) {
-                if (finalSelectedIndex < firstKeywords.length) {
-                    selectedKeyword = firstKeywords[finalSelectedIndex];
-                } else {
-                    selectedKeyword = secondKeywords[finalSelectedIndex - firstKeywords.length];
-                } // End of if else
-                
-                repeatPrompt = yesOrNoQuestion("Are you sure you want to select \"" + selectedKeyword + "\"?");
-            } else {
-                repeatPrompt = false;
-            }
-            
-            // repeat if requires confirmation and user does not confirm 
-        } while(repeatPrompt); // End of confirmation while loop
-
-        return finalSelectedIndex;
-    } // End of selectFromTwoOptionGroups
     
     
     
@@ -324,40 +194,6 @@ public class ConsoleUserInput
     
     
     /**
-     * Overload of getIntInput that auto-generates the min and max messages
-     * 
-     * @param userPrompt String - prompt to show user
-     * @param minInt int - inclusive minimum
-     * @param maxInt int - inclusive maximum
-     * @return int
-     */
-    public static int getIntInput(String userPrompt, int minInt, int maxInt) {
-        
-        return getIntInput(userPrompt, minInt, maxInt,
-        "Number must be greater than or equal to " + minInt,
-        "Number must be less than or equal to " + maxInt); // End of return statement
-        
-    } // End of getIntInput (overload)
-    
-    
-    
-    
-    
-    /**
-     * Overload of getIntInput that takes no min or max value
-     * 
-     * @param userPrompt String - prompt to show user
-     * @return int
-     */
-    public static int getIntInput(String userPrompt) {
-        return getIntInput(userPrompt, Integer.MIN_VALUE, Integer.MAX_VALUE, "Too small", "Too large");
-    } // End of getIntInput (overload)
-    
-    
-    
-    
-    
-    /**
      * Gets a double input from the user.
      * 
      * @param userPrompt String - prompt to show user
@@ -382,4 +218,27 @@ public class ConsoleUserInput
         doubleInputScanner.close();
         return finalResultNumber;
     } // End of getDoubleInput
-}
+    
+    
+} // End of class ConsoleUserInput
+
+
+
+
+
+// End of Program
+
+
+
+/*
+ * 
+ * NOTES: 
+ * 
+ * 
+ * 
+ * 
+ * TEST CODE:
+ * 
+ * 
+ * 
+*/
